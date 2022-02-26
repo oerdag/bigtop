@@ -38,6 +38,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     if ("namenode" in $roles) {
       include hadoop::init_hdfs
       include hadoop::namenode
+      include hadoop::journalnode
 
       if ("datanode" in $roles) {
 #        if("journalnode" in $roles) {
@@ -711,7 +712,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [Service["hadoop-hdfs-journalnode"],Package["hadoop-hdfs-namenode"]],
+      require => [Package["hadoop-hdfs-namenode"]],
     } 
     Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-namenode"]
 

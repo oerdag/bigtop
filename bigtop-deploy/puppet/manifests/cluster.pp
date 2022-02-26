@@ -169,7 +169,9 @@ class hadoop_cluster_node (
   $ha_auto = hiera("hadoop::common_hdfs::ha", "disabled")
   $hadoop_gateway_node = hiera("bigtop::hadoop_gateway_node", $hadoop_head_node)
 
-
+  notice("ecil_hadoop_head_node to deploy: ${hadoop_head_node}")
+  notice("ecil_standby_head_node to deploy: ${standby_head_node}")
+  notice("ecil_ha_auto to deploy: ${ha_auto}")
   if ($ha_auto=="auto"){
     $ha_enabled = $standby_head_node ? {
       ""      => true,

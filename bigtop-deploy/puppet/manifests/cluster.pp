@@ -169,12 +169,18 @@ class hadoop_cluster_node (
   $ha_auto = hiera("hadoop::common_hdfs::ha", "disabled")
   $hadoop_gateway_node = hiera("bigtop::hadoop_gateway_node", $hadoop_head_node)
 
-  $ha_enabled = $standby_head_node ? {
-    ""      => false,
-    default => true,
-  }
+
   if ($ha_auto=="auto"){
-    $ha_enabled=true
+    $ha_enabled = $standby_head_node ? {
+      ""      => true,
+      default => true,
+    }
+  }
+  else{
+    $ha_enabled = $standby_head_node ? {
+      ""      => false,
+      default => true,
+    }
   }
 
   # look into alternate hiera datasources configured using this path in

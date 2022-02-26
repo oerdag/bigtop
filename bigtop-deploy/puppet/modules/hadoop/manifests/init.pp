@@ -40,13 +40,13 @@ class hadoop ($hadoop_security_authentication = "simple",
       include hadoop::namenode
 
       if ("datanode" in $roles) {
-        if("journalnode" in $roles) {
+#        if("journalnode" in $roles) {
           Class['Hadoop::Journalnode'] -> Class['Hadoop::Namenode'] -> Class['Hadoop::Datanode'] -> Class['Hadoop::Init_hdfs']
-        }
-        else {
+#        }
+#        else {
 
-          Class['Hadoop::Namenode'] -> Class['Hadoop::Datanode'] -> Class['Hadoop::Init_hdfs']
-        }
+#          Class['Hadoop::Namenode'] -> Class['Hadoop::Datanode'] -> Class['Hadoop::Init_hdfs']
+#        }
       } else {
         Class['Hadoop::Namenode'] -> Class['Hadoop::Init_hdfs']
       }

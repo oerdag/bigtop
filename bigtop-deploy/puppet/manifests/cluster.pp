@@ -40,9 +40,9 @@ $roles_map = {
     standby => ["secondarynamenode"],
   },
   hdfs-ha => {
-    master => ["namenode"],
+    master => ["namenode","journalnode"],
     worker => ["datanode"],
-    standby => ["standby-namenode"],
+    standby => ["standby-namenode","journalnode"],
   },
   yarn => {
     master => ["resourcemanager"],

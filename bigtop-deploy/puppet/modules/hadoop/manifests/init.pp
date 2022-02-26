@@ -48,7 +48,7 @@ class hadoop ($hadoop_security_authentication = "simple",
 #          Class['Hadoop::Namenode'] -> Class['Hadoop::Datanode'] -> Class['Hadoop::Init_hdfs']
 #        }
       } else {
-        Class['Hadoop::Namenode'] -> Class['Hadoop::Init_hdfs']
+        Class['Hadoop::Journalnode'] -> Class['Hadoop::Namenode'] -> Class['Hadoop::Init_hdfs']
       }
     }
 
@@ -711,7 +711,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
-      require => [Package["hadoop-hdfs-namenode"]],
+      require => [Service["hadoop-hdfs-journalnode"],Package["hadoop-hdfs-namenode"]],
     } 
     Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-namenode"]
 

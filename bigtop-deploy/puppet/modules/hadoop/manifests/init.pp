@@ -651,7 +651,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       }
 
       file { $hadoop::common_hdfs::sshfence_keypath:
-        source  => "puppet:///files/$hadoop::common_hdfs::sshfence_privkey",
+#        source  => "puppet:///files/$hadoop::common_hdfs::sshfence_privkey",
+        source  => "$hadoop::common_hdfs::sshfence_privkey",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0600',
@@ -660,7 +661,8 @@ class hadoop ($hadoop_security_authentication = "simple",
       }
 
       file { "$hadoop::common_hdfs::sshfence_keydir/authorized_keys":
-        source  => "puppet:///files/$hadoop::common_hdfs::sshfence_pubkey",
+#        source  => "puppet:///files/$hadoop::common_hdfs::sshfence_pubkey",
+        source  => "$hadoop::common_hdfs::sshfence_pubkey",
         owner   => 'hdfs',
         group   => 'hdfs',
         mode    => '0600',
@@ -846,6 +848,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       subscribe => [Package["hadoop-hdfs-journalnode"], File["/etc/hadoop/conf/hadoop-env.sh"],
                     File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [ Package["hadoop-hdfs-journalnode"], File[$journalnode_cluster_journal_dir] ],
+      before  => Service["hadoop-hdfs-namenode"],
     }
 
     hadoop::create_storage_dir { [$hadoop::common_hdfs::journalnode_edits_dir, $journalnode_cluster_journal_dir]: } ->

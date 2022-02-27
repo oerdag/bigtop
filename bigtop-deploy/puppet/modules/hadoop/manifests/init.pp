@@ -193,7 +193,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     }
   }
 
-  class common_hdfs ($ha = "auto",
+  class common_hdfs ($ha = "manual",
       $hadoop_config_dfs_block_size = undef,
       $hadoop_config_namenode_handler_count = undef,
       $hadoop_dfs_datanode_plugins = "",

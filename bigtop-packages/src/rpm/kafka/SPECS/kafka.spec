@@ -118,8 +118,8 @@ bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/%{kafka_name}-server.svc rpm $i
 #### Kafka core section ####
 #######################
 %pre
-getent group kafka >/dev/null || groupadd -r kafka
-getent passwd kafka >/dev/null || useradd -c "Kafka" -s /sbin/nologin -g kafka -r -d %{var_lib_kafka} kafka 2> /dev/null || :
+getent group kafka >/dev/null || groupadd -g 1507 -r kafka
+getent passwd kafka >/dev/null || useradd -u 1507 -c "Kafka" -s /sbin/nologin -g kafka -r -d %{var_lib_kafka} kafka 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_kafka} %{kafka_name}-conf %{config_kafka}.dist 30

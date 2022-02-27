@@ -127,8 +127,8 @@ do
 done
 
 %pre
-getent group flink >/dev/null || groupadd -r flink
-getent passwd flink >/dev/null || useradd -c "Flink" -s /sbin/nologin -g flink -r -d %{lib_flink} flink 2> /dev/null || :
+getent group flink >/dev/null || groupadd -g 1518 -r flink
+getent passwd flink >/dev/null || useradd -u 1518 -c "Flink" -s /sbin/nologin -g flink -r -d %{lib_flink} flink 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_flink} %{flink_name}-conf %{config_flink}.dist 30

@@ -192,8 +192,8 @@ do
 done
 
 %pre
-getent group spark >/dev/null || groupadd -r spark
-getent passwd spark >/dev/null || useradd -c "Spark" -s /sbin/nologin -g spark -r -d %{var_lib_spark} spark 2> /dev/null || :
+getent group spark >/dev/null || groupadd -g 1514 -r spark
+getent passwd spark >/dev/null || useradd -u 1514 -c "Spark" -s /sbin/nologin -g spark -r -d %{var_lib_spark} spark 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_spark} %{spark_name}-conf %{config_spark}.dist 30

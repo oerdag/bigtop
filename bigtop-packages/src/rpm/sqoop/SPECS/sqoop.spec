@@ -130,8 +130,8 @@ chmod 0755 $init_file
 %__install -d  -m 0755 $RPM_BUILD_ROOT/var/log/sqoop
 
 %pre
-getent group sqoop >/dev/null || groupadd -r sqoop
-getent passwd sqoop > /dev/null || useradd -c "Sqoop" -s /sbin/nologin \
+getent group sqoop >/dev/null || groupadd -g 1515 -r sqoop
+getent passwd sqoop > /dev/null || useradd -u 1515 -c "Sqoop" -s /sbin/nologin \
 	-g sqoop -r -d /var/lib/sqoop sqoop 2> /dev/null || :
 
 %post

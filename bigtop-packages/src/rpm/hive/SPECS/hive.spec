@@ -282,8 +282,8 @@ do
 done
 
 %pre
-getent group hive >/dev/null || groupadd -r hive
-getent passwd hive >/dev/null || useradd -c "Hive" -s /sbin/nologin -g hive -r -d %{var_lib_hive} hive 2> /dev/null || :
+getent group hive >/dev/null || groupadd -g 1506 -r hive
+getent passwd hive >/dev/null || useradd -u 1506 -c "Hive" -s /sbin/nologin -g hive -r -d %{var_lib_hive} hive 2> /dev/null || :
 
 # Manage configuration symlink
 %post

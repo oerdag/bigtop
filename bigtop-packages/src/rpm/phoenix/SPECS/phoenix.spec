@@ -116,8 +116,8 @@ bash %{SOURCE2} \
   --prefix=$RPM_BUILD_ROOT
 
 %pre
-getent group phoenix >/dev/null || groupadd -r phoenix
-getent passwd phoenix >/dev/null || useradd -c "Phoenix" -s /sbin/nologin -g phoenix -r -d %{var_lib_phoenix} phoenix 2> /dev/null || :
+getent group phoenix >/dev/null || groupadd -g 1512 -r phoenix
+getent passwd phoenix >/dev/null || useradd -u 1512 -c "Phoenix" -s /sbin/nologin -g phoenix -r -d %{var_lib_phoenix} phoenix 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{etc_phoenix_conf} %{name}-conf %{etc_phoenix_conf_dist} 30

@@ -72,8 +72,8 @@ sh $RPM_SOURCE_DIR/install_kibana.sh \
 ln -sf %{lib_kibana}/bin/* ${RPM_BUILD_ROOT}%{bin_kibana}
 
 %pre
-getent group kibana >/dev/null || groupadd -r kibana
-getent passwd kibana > /dev/null || useradd -c "Kibana" -s /sbin/nologin -g kibana -r -d %{run_kibana} kibana 2> /dev/null || :
+getent group kibana >/dev/null || groupadd -g 1508 -r kibana
+getent passwd kibana > /dev/null || useradd -u 1508 -c "Kibana" -s /sbin/nologin -g kibana -r -d %{run_kibana} kibana 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_kibana} %{kibana_name}-conf %{config_kibana}.dist 30

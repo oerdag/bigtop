@@ -154,8 +154,8 @@ Requires: bigtop-utils >= 0.7
 %__install -d  -m 0755  %{buildroot}/%{_localstatedir}/run/oozie
 
 %pre
-getent group oozie >/dev/null || /usr/sbin/groupadd -r oozie >/dev/null
-getent passwd oozie >/dev/null || /usr/sbin/useradd --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
+getent group oozie >/dev/null || /usr/sbin/groupadd -g 1511 -r oozie >/dev/null
+getent passwd oozie >/dev/null || /usr/sbin/useradd -u 1511 --comment "Oozie User" --shell /bin/false -M -r -g oozie --home %{data_oozie} oozie >/dev/null
 
 %post
 %{alternatives_cmd} --install %{conf_oozie} %{name}-conf %{conf_oozie_dist} 30

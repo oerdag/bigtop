@@ -101,8 +101,8 @@ for service in %{livy_services}; do
 done
 
 %pre
-getent group livy >/dev/null || groupadd -r livy
-getent passwd livy >/dev/null || useradd -c "Livy" -s /sbin/nologin -g livy -r -d %{var_lib_livy} livy 2> /dev/null || :
+getent group livy >/dev/null || groupadd -g 1509 -r livy
+getent passwd livy >/dev/null || useradd -u 1509 -c "Livy" -s /sbin/nologin -g livy -r -d %{var_lib_livy} livy 2> /dev/null || :
 
 %post
 install --owner livy --group livy --directory --mode=0755 %{var_log_livy}

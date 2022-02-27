@@ -611,27 +611,27 @@ done
 %__install -d -m 1777 $RPM_BUILD_ROOT/%{lib_hadoop}/logs
 
 %pre
-getent group hadoop >/dev/null || groupadd -r hadoop
+getent group hadoop >/dev/null || groupadd -r hadoop -g 1500
 
 %pre hdfs
-getent group hdfs >/dev/null   || groupadd -r hdfs
-getent passwd hdfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{state_hdfs} hdfs
+getent group hdfs >/dev/null   || groupadd -r hdfs -g 1501
+getent passwd hdfs >/dev/null || /usr/sbin/useradd -u 1501  --comment "Hadoop HDFS" --shell /bin/bash -M -r -g hdfs -G hadoop --home %{state_hdfs} hdfs
 
 %pre httpfs
-getent group httpfs >/dev/null   || groupadd -r httpfs
-getent passwd httpfs >/dev/null || /usr/sbin/useradd --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{run_httpfs} httpfs
+getent group httpfs >/dev/null   || groupadd -r httpfs -g 1502
+getent passwd httpfs >/dev/null || /usr/sbin/useradd -u 1502 --comment "Hadoop HTTPFS" --shell /bin/bash -M -r -g httpfs -G httpfs --home %{run_httpfs} httpfs
 
 %pre kms
-getent group kms >/dev/null   || groupadd -r kms
-getent passwd kms >/dev/null || /usr/sbin/useradd --comment "Hadoop KMS" --shell /bin/bash -M -r -g kms -G kms --home %{state_kms} kms
+getent group kms >/dev/null   || groupadd -r kms -g 1502
+getent passwd kms >/dev/null || /usr/sbin/useradd -u 1502 --comment "Hadoop KMS" --shell /bin/bash -M -r -g kms -G kms --home %{state_kms} kms
 
 %pre yarn
-getent group yarn >/dev/null   || groupadd -r yarn
-getent passwd yarn >/dev/null || /usr/sbin/useradd --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{state_yarn} yarn
+getent group yarn >/dev/null   || groupadd -r yarn -g 1503
+getent passwd yarn >/dev/null || /usr/sbin/useradd -u 1503 --comment "Hadoop Yarn" --shell /bin/bash -M -r -g yarn -G hadoop --home %{state_yarn} yarn
 
 %pre mapreduce
-getent group mapred >/dev/null   || groupadd -r mapred
-getent passwd mapred >/dev/null || /usr/sbin/useradd --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
+getent group mapred >/dev/null   || groupadd -r mapred -g 1504
+getent passwd mapred >/dev/null || /usr/sbin/useradd -u 1504 --comment "Hadoop MapReduce" --shell /bin/bash -M -r -g mapred -G hadoop --home %{state_mapreduce} mapred
 
 %post
 %{alternatives_cmd} --install %{config_hadoop} %{name}-conf %{etc_hadoop}/conf.empty 10

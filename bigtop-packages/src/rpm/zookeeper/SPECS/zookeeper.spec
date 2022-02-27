@@ -176,8 +176,8 @@ init_file=$RPM_BUILD_ROOT/%{initd_dir}/zookeeper-rest
 bash $RPM_SOURCE_DIR/init.d.tmpl $RPM_SOURCE_DIR/zookeeper-rest.svc rpm $init_file
 
 %pre
-getent group zookeeper >/dev/null || groupadd -r zookeeper
-getent passwd zookeeper > /dev/null || useradd -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{vlb_zookeeper} zookeeper 2> /dev/null || :
+getent group zookeeper >/dev/null || groupadd -g 1517 -r zookeeper
+getent passwd zookeeper > /dev/null || useradd -u 1517 -c "ZooKeeper" -s /sbin/nologin -g zookeeper -r -d %{vlb_zookeeper} zookeeper 2> /dev/null || :
 
 %__install -d -o zookeeper -g zookeeper -m 0755 %{run_zookeeper}
 %__install -d -o zookeeper -g zookeeper -m 0755 %{log_zookeeper}

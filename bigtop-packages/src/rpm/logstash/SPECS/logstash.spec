@@ -87,8 +87,8 @@ sh $RPM_SOURCE_DIR/install_logstash.sh \
           --distro-dir=$RPM_SOURCE_DIR
 
 %pre
-getent group logstash >/dev/null || groupadd -r logstash
-getent passwd logstash > /dev/null || useradd -c "Logstash" -s /sbin/nologin -g logstash -r -d %{run_logstash} logstash 2> /dev/null || :
+getent group logstash >/dev/null || groupadd -g 1510 -r logstash
+getent passwd logstash > /dev/null || useradd -u 1510 -c "Logstash" -s /sbin/nologin -g logstash -r -d %{run_logstash} logstash 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_logstash} %{logstash_name}-conf %{config_logstash}.dist 30

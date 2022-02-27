@@ -84,8 +84,8 @@ sh $RPM_SOURCE_DIR/install_elasticsearch.sh \
           --doc-dir=%{doc_elasticsearch}
 
 %pre
-getent group elasticsearch >/dev/null || groupadd -r elasticsearch
-getent passwd elasticsearch > /dev/null || useradd -c "Elasticsearch" -s /sbin/nologin -g elasticsearch -r -d %{run_elasticsearch} elasticsearch 2> /dev/null || :
+getent group elasticsearch >/dev/null || groupadd -g 1519 -r elasticsearch
+getent passwd elasticsearch > /dev/null || useradd -u 1519 -c "Elasticsearch" -s /sbin/nologin -g elasticsearch -r -d %{run_elasticsearch} elasticsearch 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_elasticsearch} %{elasticsearch_name}-conf %{config_elasticsearch}.dist 30

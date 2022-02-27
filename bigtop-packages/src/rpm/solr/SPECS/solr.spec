@@ -126,8 +126,8 @@ init_file=$RPM_BUILD_ROOT/%{initd_dir}/%{svc_solr}
 chmod 755 $init_file
 
 %pre
-getent group solr >/dev/null || groupadd -r solr
-getent passwd solr > /dev/null || useradd -c "Solr" -s /sbin/nologin -g solr -r -d %{run_solr} solr 2> /dev/null || :
+getent group solr >/dev/null || groupadd -g 1513 -r solr
+getent passwd solr > /dev/null || useradd -u 1513 -c "Solr" -s /sbin/nologin -g solr -r -d %{run_solr} solr 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_solr} %{solr_name}-conf %{config_solr}.dist 30

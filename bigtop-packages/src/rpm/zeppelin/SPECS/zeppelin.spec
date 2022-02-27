@@ -100,8 +100,8 @@ initd_script=$RPM_BUILD_ROOT/%{initd_dir}/%{name}
 bash %{SOURCE3} $RPM_SOURCE_DIR/%{name}.svc rpm $initd_script
 
 %pre
-getent group zeppelin >/dev/null || groupadd -r zeppelin
-getent passwd zeppelin >/dev/null || useradd -c "Zeppelin" -s /sbin/nologin -g zeppelin -r -d %{var_lib_zeppelin} zeppelin 2> /dev/null || :
+getent group zeppelin >/dev/null || groupadd -g 1516 -r zeppelin
+getent passwd zeppelin >/dev/null || useradd -u 1516 -c "Zeppelin" -s /sbin/nologin -g zeppelin -r -d %{var_lib_zeppelin} zeppelin 2> /dev/null || :
 
 %post
 %{alternatives_cmd} --install %{config_zeppelin} %{name}-conf %{config_zeppelin}.dist 30

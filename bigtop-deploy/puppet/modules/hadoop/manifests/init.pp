@@ -38,24 +38,13 @@ class hadoop ($hadoop_security_authentication = "simple",
     if ("namenode" in $roles) {
       include hadoop::init_hdfs
       include hadoop::namenode
-      include hadoop::journalnode
+
 
       if ("datanode" in $roles) {
-        if("journalnode" in $roles) {
-          Class['Hadoop::Journalnode'] -> Class['Hadoop::Namenode'] -> Class['Hadoop::Datanode'] -> Class['Hadoop::Init_hdfs']
-        }
-        else {
-
           Class['Hadoop::Namenode'] -> Class['Hadoop::Datanode'] -> Class['Hadoop::Init_hdfs']
-        }
       } else {
-        if("journalnode" in $roles) {
           Class['Hadoop::Namenode'] -> Class['Hadoop::Init_hdfs']
         }
-        else {
-          Class['Hadoop::Journalnode'] -> Class['Hadoop::Namenode'] -> Class['Hadoop::Init_hdfs']
-        }
-      }
     }
 
     if ("standby-namenode" in $roles and $hadoop::common_hdfs::ha != "disabled") {
@@ -204,7 +193,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     }
   }
 
-  class common_hdfs ($ha = "disabled",
+  class common_hdfs ($ha = "auto",
       $hadoop_config_dfs_block_size = undef,
       $hadoop_config_namenode_handler_count = undef,
       $hadoop_dfs_datanode_plugins = "",
@@ -860,7 +849,6 @@ class hadoop ($hadoop_security_authentication = "simple",
       subscribe => [Package["hadoop-hdfs-journalnode"], File["/etc/hadoop/conf/hadoop-env.sh"],
                     File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [ Package["hadoop-hdfs-journalnode"], File[$journalnode_cluster_journal_dir] ],
-      before  => Service["hadoop-hdfs-namenode"],
     }
 
     hadoop::create_storage_dir { [$hadoop::common_hdfs::journalnode_edits_dir, $journalnode_cluster_journal_dir]: } ->

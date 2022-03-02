@@ -73,6 +73,11 @@
   <description>org.postgresql.Driver connection driver</description>
 </property>
 
+    <property>
+        <name>datanucleus.autoCreateSchema</name>
+        <value>false</value>
+
+    </property>
 <property>
     <name>javax.jdo.option.ConnectionUserName</name>
     <value><%= @hive_metastore_user %></value>

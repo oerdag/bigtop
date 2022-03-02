@@ -48,6 +48,13 @@ class jdk {
         noop => $jdk_preinstalled,
       }
     }
+    /(RedHat)/: {
+      package { 'jdk':
+        name => 'java-1.8.0-openjdk',
+        ensure => present,
+        noop => $jdk_preinstalled,
+      }
+    }
     /OpenSuSE/: {
       package { 'jdk':
         name => 'java-1_8_0-openjdk-devel',

@@ -181,6 +181,11 @@ hadoop::common::tez_jars: "/usr/lib/tez"
 # to enable tez in hive, uncomment the lines below
 # hadoop_hive::common_config::hive_execution_engine: "tez"
 
+
+hadoop_hive::common_config::hive_metastore_jdbc_url: "jdbc:postgresql://ecil-bt-m1/metastore_db"
+hadoop_hive::common_config::hive_metastore_driver: "org.postgresql.Driver"
+hadoop_hive::common_config::hive_metastore_user: "hive"
+hadoop_hive::common_config::hive_metastore_passwd: "hive"
 #kafka
 kafka::server::port: "9092"
 kafka::server::zookeeper_connection_string: "%{hiera('bigtop::hadoop_head_node')}:2181"

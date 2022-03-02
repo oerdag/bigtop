@@ -108,7 +108,9 @@ $roles_map = {
     client => ["tez-client"],
   },
   zookeeper => {
-    worker => ["zookeeper-server"],
+    master => ["zookeeper-server"],
+    standby => ["zookeeper-server"],
+    gateway_server => ["zookeeper-server"],
     client => ["zookeeper-client"],
   },
   ycsb => {

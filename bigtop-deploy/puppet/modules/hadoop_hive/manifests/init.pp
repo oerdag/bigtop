@@ -15,7 +15,9 @@
 
 class hadoop_hive {
 
-  class deploy ($roles) {
+  class deploy (
+    $roles
+  ) {
     if ("hive-client" in $roles) {
       include hadoop_hive::client
     }
@@ -42,24 +44,30 @@ class hadoop_hive {
   class client_package {
     package { "hive":
       ensure => latest,
-    } 
+    }
   }
 
-  class common_config ($hbase_master = "",
-                       $hbase_zookeeper_quorum = "",
-                       $hive_zookeeper_quorum = "",
-                       $hive_support_concurrency = false,
-                       $kerberos_realm = "",
-                       $metastore_uris = "",
-                       $metastore_schema_verification = true,
-                       $server2_thrift_port = "10000",
-                       $server2_thrift_http_port = "10001",
-                       $hive_execution_engine = "mr") {
+  class common_config (
+    $hbase_master                  = "",
+    $hbase_zookeeper_quorum        = "",
+    $hive_zookeeper_quorum         = "",
+    $hive_support_concurrency      = false,
+    $kerberos_realm                = "",
+    $metastore_uris                = "",
+    $metastore_schema_verification = true,
+    $server2_thrift_port           = "10000",
+    $server2_thrift_http_port      = "10001",
+    $hive_execution_engine         = "mr",
+    $hive_metastore_jdbc_url       = "jdbc:postgresql://ecil-bt-m1/metastore_db",
+    $hive_metastore_driver         = "org.postgresql.Driver",
+    $hive_metastore_user           = "hive",
+    $hive_metastore_passwd         = "hive",
+  ) {
     include hadoop_hive::client_package
     if ($kerberos_realm and $kerberos_realm != "") {
       require kerberos::client
-      kerberos::host_keytab { "hive": 
-        spnego => true,
+      kerberos::host_keytab { "hive":
+        spnego  => true,
         require => Package["hive"],
       }
     }
@@ -70,11 +78,18 @@ class hadoop_hive {
     }
   }
 
-  class client($hbase_master = "",
-      $hbase_zookeeper_quorum = "",
-      $hive_execution_engine = "mr") {
+  class client (
+    $hbase_master            = "",
+    $hbase_zookeeper_quorum  = "",
+    $hive_execution_engine   = "mr",
 
-      include hadoop_hive::common_config
+    $hive_metastore_jdbc_url = "jdbc:postgresql://ecil-bt-m1/metastore_db",
+    $hive_metastore_driver   = "org.postgresql.Driver",
+    $hive_metastore_user     = "hive",
+    $hive_metastore_passwd   = "hive"
+  ) {
+
+    include hadoop_hive::common_config
   }
 
   class server2 {
@@ -85,12 +100,12 @@ class hadoop_hive {
     }
 
     service { "hive-server2":
-      ensure => running,
-      require => Package["hive-server2"],
-      subscribe => File["/etc/hive/conf/hive-site.xml"],
+      ensure     => running,
+      require    => Package["hive-server2"],
+      subscribe  => File["/etc/hive/conf/hive-site.xml"],
       hasrestart => true,
-      hasstatus => true,
-    } 
+      hasstatus  => true,
+    }
     Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-server2"]
     Service <| title == "hive-metastore" |> -> Service["hive-server2"]
   }
@@ -103,11 +118,11 @@ class hadoop_hive {
     }
 
     service { "hive-metastore":
-      ensure => running,
-      require => Package["hive-metastore"],
-      subscribe => File["/etc/hive/conf/hive-site.xml"],
+      ensure     => running,
+      require    => Package["hive-metastore"],
+      subscribe  => File["/etc/hive/conf/hive-site.xml"],
       hasrestart => true,
-      hasstatus => true,
+      hasstatus  => true,
     }
     Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-metastore"]
     File <| title == "/etc/hadoop/conf/core-site.xml" |> -> Service["hive-metastore"]

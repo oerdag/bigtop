@@ -110,8 +110,8 @@ $roles_map = {
   zookeeper => {
     master => ["zookeeper-server"],
     standby => ["zookeeper-server"],
-    gateway_server => ["zookeeper-server"],
-    client => ["zookeeper-client"],
+    library => ["zookeeper-server"],
+    client => ["zookeeper-server"],
   },
   ycsb => {
     client => ["ycsb-client"],

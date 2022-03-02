@@ -17,7 +17,8 @@ class bigtop_repo {
   $bigtop_repo_default_version = hiera("bigtop::bigtop_repo_default_version")
   $bigtop_repo_gpg_check = hiera("bigtop::bigtop_repo_gpg_check", true)
   $lower_os = downcase($operatingsystem)
-  $default_repo = "http://repos.bigtop.apache.org/releases/${bigtop_repo_default_version}/${lower_os}/${operatingsystemmajrelease}/${architecture}"
+  #$default_repo = "http://repos.bigtop.apache.org/releases/${bigtop_repo_default_version}/${lower_os}/${operatingsystemmajrelease}/${architecture}"
+  $default_repo = "http://repos.bigtop.apache.org/releases/3.0.0/centos/${operatingsystemmajrelease}/${architecture}"
 
   case $::operatingsystem {
     /(OracleLinux|Amazon|CentOS|Fedora|RedHat)/: {

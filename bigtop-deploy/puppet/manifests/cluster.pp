@@ -104,6 +104,7 @@ $roles_map = {
     master => ["hive-server2", "hive-metastore"],
     client => ["hive-client"],
     worker => ["hive-client"],
+    gateway_server => ["hive-client"],
   },
   tez => {
     client => ["tez-client"],

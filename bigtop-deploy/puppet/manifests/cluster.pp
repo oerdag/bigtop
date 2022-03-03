@@ -103,6 +103,7 @@ $roles_map = {
   hive => {
     master => ["hive-server2", "hive-metastore"],
     client => ["hive-client"],
+    worker => ["hive-client"],
   },
   tez => {
     client => ["tez-client"],

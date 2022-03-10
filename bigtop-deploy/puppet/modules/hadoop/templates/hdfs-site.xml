@@ -354,4 +354,14 @@
   </property>
 <% end -%>
 
+<% if @tls_enabled %>
+<property>
+  <name>dfs.http.policy</name>
+  <value>HTTPS_ONLY</value>
+</property>
+<property>
+  <name>dfs.client.https.need-auth</name>
+  <value>false</value>
+</property>
+<% end -%>
 </configuration>

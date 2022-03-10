@@ -166,6 +166,7 @@
 <% end -%>
 
 <% if @tls_enabled %>
+
   <property>
     <name>hadoop.ssl.require.client.cert</name>
     <value>false</value>

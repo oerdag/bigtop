@@ -66,7 +66,13 @@
 
 # Default
 #hadoop::common_hdfs::ha: "disabled"
-
+hadoop::common_hdfs::tls_enabled: true
+hadoop::common_hdfs::keystore_location: "/opt/cloudera/security/jks/hadoop.keystore"
+hadoop::common_hdfs::keystore_password: "BigDataVF2"
+hadoop::common_hdfs::keystore_type: "jks"
+hadoop::common_hdfs::truststore_location: "/opt/cloudera/security/jks/bigldmmp01.jks"
+hadoop::common_hdfs::truststore_type: "jks"
+hadoop::common_hdfs::truststore_password: "BigDataVF2"
 # Kerberos
 #hadoop::hadoop_security_authentication: "kerberos"
 #kerberos::krb_site::domain: "bigtop.apache.org"

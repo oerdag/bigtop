@@ -1,0 +1,34 @@
+<configuration>
+
+    <!-- Client certificate Store -->
+    <property>
+        <name>ssl.client.keystore.type</name>
+        <value><%= @keystore_type %></value>
+    </property>
+    <property>
+        <name>ssl.client.keystore.location</name>
+        <value><%= @keystore_location %></value>
+    </property>
+    <property>
+        <name>ssl.client.keystore.password</name>
+        <value><%= @keystore_password %></value>
+    </property>
+
+    <!-- Client Trust Store -->
+    <property>
+        <name>ssl.client.truststore.type</name>
+        <value><%= @truststore_type %></value>
+    </property>
+    <property>
+        <name>ssl.client.truststore.location</name>
+        <value><%= @truststore_location %></value>
+    </property>
+    <property>
+        <name>ssl.client.truststore.password</name>
+        <value><%= @truststore_password %></value>
+    </property>
+    <property>
+        <name>ssl.client.truststore.reload.interval</name>
+        <value>10000</value>
+    </property>
+</configuration>

@@ -214,4 +214,11 @@
     <value><%= @mapreduce_job_reduce_slowstart_completedmaps %></value>
   </property>
 <% end -%>
+<% if @tls_enabled %>
+  <property>
+    <name>mapreduce.shuffle.ssl.enabled</name>
+    <value>true</value>
+    <final>true</final>
+  </property>
+<% end -%>
 </configuration>

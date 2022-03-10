@@ -244,6 +244,13 @@ class hadoop ($hadoop_security_authentication = "simple",
       $namenode_datanode_registration_ip_hostname_check = undef,
       $kms_host = $hadoop::kms_host,
       $kms_port = $hadoop::kms_port,
+      $tls_enabled= false,
+      $keystore_location= undef,
+      $keystore_password= undef,
+      $keystore_type= "jks",
+      $truststore_location= undef,
+      $truststore_type= "jks",
+      $truststore_password= undef,
   ) inherits hadoop {
 
     $sshfence_keydir  = "$hadoop_ha_sshfence_user_home/.ssh"
@@ -316,6 +323,16 @@ class hadoop ($hadoop_security_authentication = "simple",
     file {
       "/etc/hadoop/conf/hdfs-site.xml":
         content => template('hadoop/hdfs-site.xml'),
+        require => [Package["hadoop"]],
+    }
+    file {
+      "/etc/hadoop/conf/ssl-client.xml":
+        content => template('hadoop/ssl-client.xml'),
+        require => [Package["hadoop"]],
+    }
+    file {
+      "/etc/hadoop/conf/ssl-server.xml":
+        content => template('hadoop/ssl-server.xml'),
         require => [Package["hadoop"]],
     }
 
@@ -449,7 +466,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-hdfs-datanode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-hdfs-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      subscribe => [Package["hadoop-hdfs-datanode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [ Package["hadoop-hdfs-datanode"], File["/etc/default/hadoop-hdfs-datanode"], File[$hadoop::common_hdfs::hdfs_data_dirs] ],
     }
     Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-datanode"]
@@ -516,7 +533,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-httpfs"], File["/etc/hadoop/conf/httpfs-site.xml"], File["/etc/hadoop/conf/httpfs-env.sh"], File["/etc/hadoop/conf/httpfs-signature.secret"],
-        File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"]],
+        File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"]],
       require => [ Package["hadoop-httpfs"] ],
     }
     Kerberos::Host_keytab <| title == "httpfs" |> -> Service["hadoop-httpfs"]
@@ -585,7 +602,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-kms"], File["/etc/hadoop/conf/kms-site.xml"], File["/etc/hadoop/conf/kms-env.sh"], File["/etc/hadoop/conf/kms-signature.secret"],
-        File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"]],
+        File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"],],
       require => [ Package["hadoop-kms"] ],
     }
     Kerberos::Host_keytab <| title == "kms" |> -> Service["hadoop-kms"]
@@ -705,7 +722,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-hdfs-namenode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      subscribe => [Package["hadoop-hdfs-namenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-hdfs-namenode"]],
     }
     Kerberos::Host_keytab <| title == "hdfs" |> -> Exec <| tag == "namenode-format" |> -> Service["hadoop-hdfs-namenode"]
@@ -719,7 +736,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       service { "hadoop-hdfs-zkfc":
         ensure => running,
         hasstatus => true,
-        subscribe => [Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+        subscribe => [Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
         require => [Package["hadoop-hdfs-zkfc"]],
       }
       Service <| title == "hadoop-hdfs-zkfc" |> -> Service <| title == "hadoop-hdfs-namenode" |>
@@ -733,7 +750,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         command => "/bin/bash -c 'hdfs namenode -format -nonInteractive >> /var/lib/hadoop-hdfs/nn.format.log 2>&1'",
         returns => [ 0, 1],
         creates => "${hadoop::common_hdfs::namenode_data_dirs[0]}/current/VERSION",
-        require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+        require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"] ],
         tag     => "namenode-format",
       }
 
@@ -743,7 +760,7 @@ class hadoop ($hadoop_security_authentication = "simple",
             user => "hdfs",
             command => "/bin/bash -c 'hdfs zkfc -formatZK -nonInteractive >> /var/lib/hadoop-hdfs/zk.format.log 2>&1'",
             returns => [ 0, 2],
-            require => [ Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+            require => [ Package["hadoop-hdfs-zkfc"], File["/etc/hadoop/conf/hdfs-site.xml"],File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"], ],
             tag     => "namenode-format",
           }
           Service <| title == "zookeeper-server" |> -> Exec <| title == "namenode zk format" |>
@@ -766,7 +783,7 @@ class hadoop ($hadoop_security_authentication = "simple",
         # first namenode might be rebooting just now so try for some time
         command => "/bin/bash -c 'hdfs namenode -bootstrapStandby $retry_params >> /var/lib/hadoop-hdfs/nn.bootstrap-standby.log 2>&1'",
         creates => "${hadoop::common_hdfs::namenode_data_dirs[0]}/current/VERSION",
-        require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"] ],
+        require => [ Package["hadoop-hdfs-namenode"], File[$hadoop::common_hdfs::namenode_data_dirs], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"] ],
         tag     => "namenode-format",
       }
     } elsif ($hadoop::common_hdfs::ha != "disabled") {
@@ -827,7 +844,7 @@ class hadoop ($hadoop_security_authentication = "simple",
     service { "hadoop-hdfs-secondarynamenode":
       ensure => running,
       hasstatus => true,
-      subscribe => [Package["hadoop-hdfs-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
+      subscribe => [Package["hadoop-hdfs-secondarynamenode"], File["/etc/hadoop/conf/core-site.xml"], File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"], File["/etc/hadoop/conf/hadoop-env.sh"]],
       require => [Package["hadoop-hdfs-secondarynamenode"]],
     }
     Kerberos::Host_keytab <| title == "hdfs" |> -> Service["hadoop-hdfs-secondarynamenode"]
@@ -847,7 +864,7 @@ class hadoop ($hadoop_security_authentication = "simple",
       ensure => running,
       hasstatus => true,
       subscribe => [Package["hadoop-hdfs-journalnode"], File["/etc/hadoop/conf/hadoop-env.sh"],
-                    File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/core-site.xml"]],
+                    File["/etc/hadoop/conf/hdfs-site.xml"], File["/etc/hadoop/conf/ssl-client.xml"],File["/etc/hadoop/conf/ssl-server.xml"], File["/etc/hadoop/conf/core-site.xml"]],
       require => [ Package["hadoop-hdfs-journalnode"], File[$journalnode_cluster_journal_dir] ],
     }
 

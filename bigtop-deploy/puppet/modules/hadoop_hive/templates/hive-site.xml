@@ -175,4 +175,25 @@
   </description>
 </property>
 <% end %>
+
+<% if @tls_enabled %>
+    <property>
+        <name>hive.server2.use.SSL</name>
+        <value>true</value>
+        <description></description>
+    </property>
+
+    <property>
+        <name>hive.server2.keystore.path</name>
+        <value><%= @keystore_location %></value>
+        <description></description>
+    </property>
+
+    <property>
+        <name>hive.server2.keystore.password</name>
+        <value><%= @keystore_password %></value>
+        <description></description>
+    </property>
+<% end %>
+
 </configuration>

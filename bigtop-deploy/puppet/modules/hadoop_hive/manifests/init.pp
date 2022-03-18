@@ -62,6 +62,11 @@ class hadoop_hive {
     $hive_metastore_driver         = "org.postgresql.Driver",
     $hive_metastore_user           = "hive",
     $hive_metastore_passwd         = "hive",
+    $tls_enabled         = false,
+    $keystore_location         = undef,
+    $keystore_password         = undef,
+    $keystore_password         = undef,
+    $keystore_type         = "jks",
   ) {
     include hadoop_hive::client_package
     if ($kerberos_realm and $kerberos_realm != "") {

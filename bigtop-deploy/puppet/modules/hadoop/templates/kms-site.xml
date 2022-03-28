@@ -81,9 +81,14 @@
 
   <property>
     <name>hadoop.kms.authentication.type</name>
+    <% if (@hadoop_security_authentication == "kerberos" || @hadoop_security_authentication == "kerberos_manual") %>
+    <value>kerberos</value>
+    <% end -%>
+    <% else -%>
     <value><%= @hadoop_security_authentication %></value>
+    <$ end -%>
   </property>
-<% if @hadoop_security_authentication == "kerberos" -%>
+<% if (@hadoop_security_authentication == "kerberos" || @hadoop_security_authentication == "kerberos_manual") %>
   <property>
     <name>hadoop.kms.authentication.kerberos.keytab</name>
     <value>/etc/kms.keytab</value>

@@ -19,7 +19,7 @@
 
 <% resourcemanager_hosts = Array(@hadoop_rm_host) -%>
 <configuration>
-<% if @hadoop_security_authentication == "kerberos" or @hadoop_security_authentication == "kerberos_manual" %>
+<% if @hadoop_security_authentication != "simple" %>
   <!-- JobTracker security configs -->
   <property>
     <name>yarn.resourcemanager.principal</name>

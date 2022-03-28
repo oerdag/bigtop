@@ -146,7 +146,7 @@
   </property>
 
 <%   end -%>
-<% if @hadoop_security_authentication == "kerberos"  or @hadoop_security_authentication == "kerberos_manual" -%>
+<% if @hadoop_security_authentication != "simple" -%>
   <property>
     <name>dfs.block.access.token.enable</name>
     <value>true</value>

@@ -119,7 +119,7 @@
   </property>
 <% end %>
 
-<% if @hadoop_http_authentication_type == "kerberos" -%>
+<% if (@hadoop_http_authentication_type == "kerberos" || @hadoop_http_authentication_type == "kerberos_manual") %>
   <!-- enable proper authentication instead of static mock authentication as
        Dr. Who -->
   <property>

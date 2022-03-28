@@ -36,7 +36,7 @@
 <% end -%>
 <% end -%>
 
-<% if (@hadoop_security_authentication == "kerberos" ) or (@hadoop_security_authentication == "kerberos_manual") %>
+<% if @hadoop_security_authentication == "kerberos"  or if @hadoop_security_authentication == "kerberos_manual" %>
   <property>
     <name>httpfs.authentication.type</name>
     <value>kerberos</value>

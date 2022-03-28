@@ -18,7 +18,7 @@
 
 <configuration>
 
-<% if (@hadoop_security_authentication == "kerberos" ) or (@hadoop_security_authentication == "kerberos_manual") %>
+<% if @hadoop_security_authentication == "kerberos"  or if @hadoop_security_authentication == "kerberos_manual" %>
   <!-- HistoryServer security configs -->
   <property>
     <name>mapreduce.jobhistory.principal</name>

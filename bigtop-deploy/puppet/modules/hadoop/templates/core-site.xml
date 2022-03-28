@@ -60,14 +60,14 @@
 
   <property>
     <name>hadoop.security.authentication</name>
-    <% if (@hadoop_security_authentication == "kerberos" ) or (@hadoop_security_authentication == "kerberos_manual") %>
+    <% if @hadoop_security_authentication == "kerberos"  or if @hadoop_security_authentication == "kerberos_manual" %>
     <value>kerberos</value>
     <% else %>
     <value><%= @hadoop_security_authentication %></value>
     <% end %>
   </property>
 
-<% if (@hadoop_security_authentication == "kerberos" ) or (@hadoop_security_authentication == "kerberos_manual") %>
+<% if @hadoop_security_authentication == "kerberos"  or if @hadoop_security_authentication == "kerberos_manual" %>
   <property>
     <name>hadoop.security.authorization</name>
     <value>true</value>

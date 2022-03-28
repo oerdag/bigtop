@@ -80,7 +80,7 @@
 #hadoop_hive::common_config::keystore_type: "jks"
 
 # Kerberos
-#hadoop::hadoop_security_authentication: "kerberos"
+#hadoop::hadoop_security_authentication: "kerberos_manuel"
 #kerberos::krb_site::domain: "bigtop.apache.org"
 #kerberos::krb_site::realm: "BIGTOP.APACHE.ORG"
 #kerberos::krb_site::kdc_server: "%{hiera('bigtop::hadoop_head_node')}"

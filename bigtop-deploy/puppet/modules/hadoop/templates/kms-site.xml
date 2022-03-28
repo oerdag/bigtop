@@ -83,7 +83,6 @@
     <name>hadoop.kms.authentication.type</name>
     <% if (@hadoop_security_authentication == "kerberos" || @hadoop_security_authentication == "kerberos_manual") %>
     <value>kerberos</value>
-    <% end -%>
     <% else -%>
     <value><%= @hadoop_security_authentication %></value>
     <$ end -%>

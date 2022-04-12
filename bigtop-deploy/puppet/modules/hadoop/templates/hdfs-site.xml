@@ -347,11 +347,15 @@
 </property>
 <property>
   <name>dfs.datanode.address</name>
-  <value>0.0.0.0:1004</value>
+  <value>0.0.0.0:9866</value>
 </property>
 <property>
   <name>dfs.datanode.http.address</name>
-  <value>0.0.0.0:1006</value>
+  <value>0.0.0.0:9864</value>
+</property>
+<property>
+  <name>dfs.datanode.https.address</name>
+  <value>0.0.0.0:50010</value>
 </property>
 <property>
   <name>dfs.datanode.keytab.file</name>
@@ -367,5 +371,44 @@
 </property>
 
 <%   end -%>
-
+<property>
+  <name>fs.permissions.umask-mode</name>
+  <value>022</value>
+</property>
+<property>
+  <name>dfs.client.block.write.locateFollowingBlock.retries</name>
+  <value>7</value>
+</property>
+<property>
+  <name>dfs.encrypt.data.transfer.algorithm</name>
+  <value>3des</value>
+</property>
+<property>
+  <name>dfs.encrypt.data.transfer.cipher.suites</name>
+  <value>AES/CTR/NoPadding</value>
+</property>
+<property>
+  <name>dfs.encrypt.data.transfer.cipher.key.bitlength</name>
+  <value>256</value>
+</property>
+<property>
+  <name>dfs.namenode.acls.enabled</name>
+  <value>true</value>
+</property>
+<property>
+  <name>dfs.data.transfer.protection</name>
+  <value>privacy</value>
+</property>
+<property>
+  <name>dfs.client.read.shortcircuit</name>
+  <value>false</value>
+</property>
+<property>
+  <name>dfs.client.domain.socket.data.traffic</name>
+  <value>false</value>
+</property>
+<property>
+  <name>dfs.datanode.hdfs-blocks-metadata.enabled</name>
+  <value>true</value>
+</property>
 </configuration>

@@ -71,10 +71,10 @@ class hadoop_hive {
     include hadoop_hive::client_package
     if ($kerberos_realm and $kerberos_realm != "") {
       require kerberos::client
-      kerberos::host_keytab { "hive":
-        spnego  => true,
-        require => Package["hive"],
-      }
+     # kerberos::host_keytab { "hive":
+     #   spnego  => true,
+     #   require => Package["hive"],
+     # }
     }
 
     file { "/etc/hive/conf/hive-site.xml":
@@ -111,7 +111,7 @@ class hadoop_hive {
       hasrestart => true,
       hasstatus  => true,
     }
-    Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-server2"]
+   # Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-server2"]
     Service <| title == "hive-metastore" |> -> Service["hive-server2"]
   }
 
@@ -129,7 +129,7 @@ class hadoop_hive {
       hasrestart => true,
       hasstatus  => true,
     }
-    Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-metastore"]
+    #Kerberos::Host_keytab <| title == "hive" |> -> Service["hive-metastore"]
     File <| title == "/etc/hadoop/conf/core-site.xml" |> -> Service["hive-metastore"]
   }
 

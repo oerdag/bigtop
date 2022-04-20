@@ -122,7 +122,7 @@
    <value>org.apache.hadoop.hive.ql.security.authorization.StorageBasedAuthorizationProvider</value>
 </property>
 
-<!--<% if @kerberos_realm != "" %>-->
+<!--<###% if @kerberos_realm != "" %###>-->
 <property>
     <name>hive.server2.authentication</name>
     <value>KERBEROS</value>
@@ -152,7 +152,7 @@
     <name>hive.metastore.sasl.enabled</name>
     <value>true</value>
 </property>
-<!--<% end %> -->
+<!--<###% end %###> -->
 
 <property>
   <name>hive.metastore.schema.verification</name>

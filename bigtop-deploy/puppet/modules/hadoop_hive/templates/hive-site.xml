@@ -122,14 +122,14 @@
    <value>org.apache.hadoop.hive.ql.security.authorization.StorageBasedAuthorizationProvider</value>
 </property>
 
-<% if @kerberos_realm != "" %>
+<!--<% if @kerberos_realm != "" %>-->
 <property>
     <name>hive.server2.authentication</name>
     <value>KERBEROS</value>
 </property>
 <property>
     <name>hive.server2.authentication.kerberos.principal</name>
-    <value>hive/_HOST@<%= @kerberos_realm %></value>
+    <value>hive/_HOST@VODAFONE.LOCAL %></value>
 </property>
 <property>
     <name>hive.server2.authentication.kerberos.keytab</name>
@@ -138,7 +138,7 @@
 
 <property>
     <name>hive.metastore.kerberos.principal</name>
-    <value>hive/_HOST@<%= @kerberos_realm %></value>
+    <value>hive/_HOST@VODAFONE.LOCAL</value>
 </property>
 <property>
     <name>hive.metastore.kerberos.keytab.file</name>
@@ -152,7 +152,7 @@
     <name>hive.metastore.sasl.enabled</name>
     <value>true</value>
 </property>
-<% end %> 
+<!--<% end %> -->
 
 <property>
   <name>hive.metastore.schema.verification</name>

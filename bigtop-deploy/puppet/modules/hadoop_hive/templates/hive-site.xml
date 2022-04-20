@@ -129,7 +129,7 @@
 </property>
 <property>
     <name>hive.server2.authentication.kerberos.principal</name>
-    <value>hive/_HOST@VODAFONE.LOCAL %></value>
+    <value>hive/_HOST@VODAFONE.LOCAL</value>
 </property>
 <property>
     <name>hive.server2.authentication.kerberos.keytab</name>

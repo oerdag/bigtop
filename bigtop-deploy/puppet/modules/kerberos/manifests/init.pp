@@ -67,14 +67,6 @@ class kerberos {
       ensure => installed,
     }
 
-   file { "/tmp/adpassgen.sh":
-      ensure => present,
-      content => template('kerberos/adpassgen.sh'),
-      owner => "root",
-      group => "root",
-      mode => "0755",
-    }
-
   }
 
   class server {

@@ -15,7 +15,7 @@ class kerberos {
       $ad_bind_pass,
       $keytab_export_dir = "/var/lib/bigtop_keytabs",
       $kerberos_suffix,
-      $default_pass = '321cba') {
+      $salt = 'sa1!') {
 
     case $operatingsystem {
         'ubuntu','debian': {
@@ -39,6 +39,7 @@ class kerberos {
 #      group => "root",
 #      mode => "0644",
 #    }
+
 
     @file { $keytab_export_dir:
       ensure => directory,
@@ -65,7 +66,14 @@ class kerberos {
     package { $package_name_ad_client:
       ensure => installed,
     }
- 
+
+   file { "/tmp/adpassgen.sh":
+      ensure => present,
+      content => template('kerberos/adpassgen.sh'),
+      owner => "root",
+      group => "root",
+      mode => "0755",
+    }
 
   }
 
@@ -83,6 +91,12 @@ class kerberos {
     $adtemp = "/tmp/adtemplate.$title"
     $realm = "$kerberos::krb_site::realm"
     $kerberos_suffix = "$kerberos::krb_site::kerberos_suffix"
+    $salt = "$kerberos::krb_site::salt"
+    $randpass = inline_template("<%= `tr -dc 'a-z0-9' </dev/urandom |  head -c 10 ` %>") 
+    $pass = "${salt}${randpass}"
+    $passquoted = "\"$pass\""
+    $passencoded = inline_template("<%= `/bin/echo -n '${passquoted}' | iconv -f UTF8 -t UTF16LE | base64 -w 0`   %>")
+    
 
     file { "$adtemp":
       content => template('kerberos/ad_user.ldif'),
@@ -94,22 +108,19 @@ class kerberos {
     ->
     exec { "addprinc.$title":
       path => $kerberos::krb_site::exec_path,
-      command => "ldapadd -x -H ldap://$kerberos::krb_site::kdc_server -D \"$kerberos::krb_site::ad_bind_user\" -w $kerberos::krb_site::ad_bind_pass -f /tmp/adtemplate.$title && kadmin.local -q \"change_password -pw $kerberos::krb_site::default_pass $principal\"",
-      unless => "ldapsearch -w $kerberos::krb_site::ad_bind_pass -b \"$kerberos_suffix\" -h $kerberos::krb_site::kdc_server -D \"$kerberos::krb_site::ad_bind_user\"  \"(krbPrincipalName=$principal@$realm)\" -LLL | grep -q \"numEntries: 1\"",
+      command => "ldapadd -x -H ldaps://$kerberos::krb_site::kdc_server:636 -D \"$kerberos::krb_site::ad_bind_user\" -w $kerberos::krb_site::ad_bind_pass -f /tmp/adtemplate.$title >> /tmp/ldapadd.log",
+      unless => "ldapsearch -w $kerberos::krb_site::ad_bind_pass -b \"$kerberos_suffix\" -h $kerberos::krb_site::kdc_server -D \"$kerberos::krb_site::ad_bind_user\"  \"(servicePrincipalName=$principal)\" -L | grep -q \"numEntries: 1\"",
       require => [Package[$kerberos::krb_site::package_name_client], Package[$kerberos::krb_site::package_name_ad_client], Package[$kerberos::krb_site::package_name_admin]],
       tries => 180,
       try_sleep => 1,
+      environment => [ "LDAPTLS_REQCERT=never" ]
     }
     ->
     exec { "xst.$title":
       path    => $kerberos::krb_site::exec_path,
-      command => "ktutil <<EOF
-        add_entry -password -p $principal -k 1 -e arcfour-hmac
-        $kerberos::krb_site::default_pass      
-        wkt $keytab
-        EOF",
+       command => "printf \"%b\" \"addent -password -p $principal -k 1 -e aes256-cts-hmac-sha1-96\\n$pass\\nwrite_kt $keytab\" | ktutil",
       unless  => "klist -kt $keytab 2>/dev/null | grep -q $principal",
-      require => File[$kerberos::krb_site::keytab_export_dir],
+      require => [File[$kerberos::krb_site::keytab_export_dir]],
     }
   }
 

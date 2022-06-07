@@ -1,0 +1,22 @@
+dn: CN=<%= @principal %>,<%= @kerberos_suffix %>
+changetype: add
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+distinguishedName: CN=<%= @principal %>,<%= @kerberos_suffix %>
+cn: <%= @principal %>
+userAccountControl: 514
+accountExpires: 0
+userPrincipalName: <%= @principal %>@<%= @realm %>
+servicePrincipalName: <%= @principal %>
+
+dn: CN=<%= @principal %>,<%= @kerberos_suffix %>
+changetype: modify
+replace: unicodePwd
+unicodePwd::<%= @passencoded %>
+
+dn: CN=<%= @principal %>,<%= @kerberos_suffix %>
+changetype: modify
+replace: userAccountControl
+userAccountControl: 66048
